@@ -2250,7 +2250,8 @@
     }, {
       key: "seriesHaveSameValues",
       value: function seriesHaveSameValues(index) {
-        return this.w.globals.series[index].every(function (val, i, arr) {
+        console.log('coreUtils.js', this.w.globals.series);
+        return this.w.globals.series && this.w.globals.series[index] && this.w.globals.series[index].every(function (val, i, arr) {
           return val === arr[0];
         });
       }
@@ -18670,11 +18671,12 @@
           _this.xArrjVal = []; // if (!this.horizontal) {
           // this.xArrj.push(x + barWidth / 2)
           // }
-          // fix issue #1215;
+
+          console.log('barStacked.js this.prevY[0]', _this.prevY); // fix issue #1215;
           // where all stack bar disappear after collapsing the first series
           // sol: if only 1 arr in this.prevY(this.prevY.length === 1) and all are NaN
 
-          if (_this.prevY.length === 1 && _this.prevY[0].every(function (val) {
+          if (_this.prevY.length === 1 && _this.prevY && _this.prevY[0] && _this.prevY[0].every(function (val) {
             return isNaN(val);
           })) {
             // make this.prevY[0] all zeroH
@@ -18949,13 +18951,15 @@
             }
           }
 
-          if (typeof bYP === 'undefined') bYP = w.globals.gridHeight; // if this.prevYF[0] is all 0 resulted from line #486
+          if (typeof bYP === 'undefined') bYP = w.globals.gridHeight;
+          console.log('barStacked.js this.prevY[0] c- second place', this.prevY); // if this.prevYF[0] is all 0 resulted from line #486
           // AND every arr starting from the second only contains NaN
 
-          if (this.prevYF[0].every(function (val) {
+          if (this.prevYF && this.prevYF[0] && this.prevYF[0].every(function (val) {
             return val === 0;
           }) && this.prevYF.slice(1, i).every(function (arr) {
-            return arr.every(function (val) {
+            console.log('barStacked.js third - in the loop', arr);
+            return arr && arr.every(function (val) {
               return isNaN(val);
             });
           })) {
@@ -23068,7 +23072,9 @@
 
         var constantLabelWidth; // If true, what is the constant length to use
 
-        if (arr.length > 0 && // check arr length
+        console.log('timeScale.js', arr);
+
+        if (arr && arr.length > 0 && // check arr length
         arr[0].value && // check arr[0] contains value
         arr.every(function (lb) {
           return lb.value.length === arr[0].value.length;
@@ -29982,7 +29988,10 @@
       }
     }, {
       key: "create",
-      value: function create(ser, opts) {
+      value: function create() {
+        var ser = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+        var opts = arguments.length > 1 ? arguments[1] : undefined;
+
         if (Utils.isServerSide()) {
           return;
         }
@@ -30021,6 +30030,7 @@
         var combo = CoreUtils.checkComboSeries(ser);
         gl.comboCharts = combo.comboCharts;
         gl.comboBarCount = combo.comboBarCount;
+        console.log('apexChart.js', ser);
         var allSeriesAreEmpty = ser.every(function (s) {
           return s.data && s.data.length === 0;
         });

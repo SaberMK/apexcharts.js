@@ -124,10 +124,17 @@ class BarStacked extends Bar {
       // this.xArrj.push(x + barWidth / 2)
       // }
 
+      console.log('barStacked.js this.prevY[0]', this.prevY)
+
       // fix issue #1215;
       // where all stack bar disappear after collapsing the first series
       // sol: if only 1 arr in this.prevY(this.prevY.length === 1) and all are NaN
-      if (this.prevY.length === 1 && this.prevY[0].every((val) => isNaN(val))) {
+      if (
+        this.prevY.length === 1 &&
+        this.prevY &&
+        this.prevY[0] &&
+        this.prevY[0].every((val) => isNaN(val))
+      ) {
         // make this.prevY[0] all zeroH
         this.prevY[0] = this.prevY[0].map((val) => zeroH)
         // make this.prevYF[0] all 0
@@ -425,11 +432,18 @@ class BarStacked extends Bar {
 
       if (typeof bYP === 'undefined') bYP = w.globals.gridHeight
 
+      console.log('barStacked.js this.prevY[0] c- second place', this.prevY)
+
       // if this.prevYF[0] is all 0 resulted from line #486
       // AND every arr starting from the second only contains NaN
       if (
+        this.prevYF &&
+        this.prevYF[0] &&
         this.prevYF[0].every((val) => val === 0) &&
-        this.prevYF.slice(1, i).every((arr) => arr.every((val) => isNaN(val)))
+        this.prevYF.slice(1, i).every((arr) => {
+          console.log('barStacked.js third - in the loop', arr)
+          return arr && arr.every((val) => isNaN(val))
+        })
       ) {
         // Use the same calc way as line #485
         barYPosition = w.globals.gridHeight - zeroH

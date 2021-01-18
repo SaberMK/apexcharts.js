@@ -169,7 +169,7 @@ export default class ApexCharts {
     })
   }
 
-  create(ser, opts) {
+  create(ser = [], opts) {
     if (Utils.isServerSide()) {
       return
     }
@@ -210,6 +210,8 @@ export default class ApexCharts {
     const combo = CoreUtils.checkComboSeries(ser)
     gl.comboCharts = combo.comboCharts
     gl.comboBarCount = combo.comboBarCount
+
+    console.log('apexChart.js', ser)
 
     const allSeriesAreEmpty = ser.every((s) => s.data && s.data.length === 0)
 

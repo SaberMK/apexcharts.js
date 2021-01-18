@@ -86,7 +86,12 @@ class CoreUtils {
   }
 
   seriesHaveSameValues(index) {
-    return this.w.globals.series[index].every((val, i, arr) => val === arr[0])
+    console.log('coreUtils.js', this.w.globals.series)
+    return (
+      this.w.globals.series &&
+      this.w.globals.series[index] &&
+      this.w.globals.series[index].every((val, i, arr) => val === arr[0])
+    )
   }
 
   getCategoryLabels(labels) {

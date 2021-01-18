@@ -759,7 +759,11 @@ class TimeScale {
 
     let equalLabelLengthFlag = false // These labels got same length?
     let constantLabelWidth // If true, what is the constant length to use
+
+    console.log('timeScale.js', arr)
+
     if (
+      arr &&
       arr.length > 0 && // check arr length
       arr[0].value && // check arr[0] contains value
       arr.every((lb) => lb.value.length === arr[0].value.length) // check every arr label value is the same as the first one
