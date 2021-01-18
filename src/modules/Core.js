@@ -17,7 +17,6 @@ import Range from './Range'
 import Utils from '../utils/Utils'
 import Scales from './Scales'
 import TimeScale from './TimeScale'
-
 /**
  * ApexCharts Core Class responsible for major calculations and creating elements.
  *
@@ -34,6 +33,9 @@ export default class Core {
   // get data and store into appropriate vars
 
   setupElements() {
+    if (Utils.isServerSide()) {
+      return
+    }
     let gl = this.w.globals
     let cnf = this.w.config
 

@@ -1,4 +1,3 @@
-import '../libs/Treemap-squared'
 import Graphics from '../modules/Graphics'
 import Animations from '../modules/Animations'
 import Fill from '../modules/Fill'
@@ -25,6 +24,9 @@ export default class TreemapChart {
   }
 
   draw(series) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let w = this.w
     const graphics = new Graphics(this.ctx)
     const fill = new Fill(this.ctx)

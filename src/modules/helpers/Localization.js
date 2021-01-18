@@ -1,6 +1,5 @@
-import Utils from '../../utils/Utils'
-
 import en from '../../locales/en.json'
+import Utils from '../../utils/Utils'
 
 export default class Localization {
   constructor(ctx) {
@@ -9,6 +8,10 @@ export default class Localization {
   }
 
   setCurrentLocaleValues(localeName) {
+    if (Utils.isServerSide()) {
+      return
+    }
+
     let locales = this.w.config.chart.locales
 
     // check if user has specified locales in global Apex variable

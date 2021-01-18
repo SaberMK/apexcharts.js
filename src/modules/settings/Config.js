@@ -1,6 +1,6 @@
 import Defaults from './Defaults'
-import Utils from './../../utils/Utils'
 import Options from './Options'
+import Utils from '../../utils/Utils'
 
 /**
  * ApexCharts Config Class for extending user options with pre-defined ApexCharts config.
@@ -9,10 +9,16 @@ import Options from './Options'
  **/
 export default class Config {
   constructor(opts) {
+    if (Utils.isServerSide()) {
+      return
+    }
     this.opts = opts
   }
 
   init({ responsiveOverride }) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let opts = this.opts
     let options = new Options()
     let defaults = new Defaults(opts)
@@ -114,6 +120,9 @@ export default class Config {
   }
 
   checkForCatToNumericXAxis(chartType, chartDefaults, opts) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let defaults = new Defaults(opts)
 
     const isBarHorizontal =
@@ -149,6 +158,9 @@ export default class Config {
   }
 
   extendYAxis(opts, w) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let options = new Options()
 
     if (
@@ -217,6 +229,9 @@ export default class Config {
 
   // annotations also accepts array, so we need to extend them manually
   extendAnnotations(opts) {
+    if (Utils.isServerSide()) {
+      return
+    }
     if (typeof opts.annotations === 'undefined') {
       opts.annotations = {}
       opts.annotations.yaxis = []
@@ -232,6 +247,9 @@ export default class Config {
   }
 
   extendYAxisAnnotations(opts) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let options = new Options()
 
     opts.annotations.yaxis = Utils.extendArray(
@@ -244,6 +262,9 @@ export default class Config {
   }
 
   extendXAxisAnnotations(opts) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let options = new Options()
 
     opts.annotations.xaxis = Utils.extendArray(
@@ -255,6 +276,9 @@ export default class Config {
     return opts
   }
   extendPointAnnotations(opts) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let options = new Options()
 
     opts.annotations.points = Utils.extendArray(
@@ -267,6 +291,9 @@ export default class Config {
   }
 
   checkForDarkTheme(opts) {
+    if (Utils.isServerSide()) {
+      return
+    }
     if (opts.theme && opts.theme.mode === 'dark') {
       if (!opts.tooltip) {
         opts.tooltip = {}
@@ -290,6 +317,9 @@ export default class Config {
   }
 
   handleUserInputErrors(opts) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let config = opts
     // conflicting tooltip option. intersect makes sure to focus on 1 point at a time. Shared cannot be used along with it
     if (config.tooltip.shared && config.tooltip.intersect) {

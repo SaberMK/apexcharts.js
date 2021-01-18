@@ -1,4 +1,4 @@
-import Utils from './../../utils/Utils'
+import Utils from '../../utils/Utils'
 
 export default class Globals {
   initGlobalVars(gl) {
@@ -105,7 +105,8 @@ export default class Globals {
         largestSize: 0
       },
       animationEnded: false,
-      isTouchDevice: 'ontouchstart' in window || navigator.msMaxTouchPoints,
+      isTouchDevice:
+        (window && 'ontouchstart' in window) || navigator.msMaxTouchPoints,
       isDirty: false, // chart has been updated after the initial render. This is different than dataChanged property. isDirty means user manually called some method to update
       isExecCalled: false, // whether user updated the chart through the exec method
       initialConfig: null, // we will store the first config user has set to go back when user finishes interactions like zooming and come out of it

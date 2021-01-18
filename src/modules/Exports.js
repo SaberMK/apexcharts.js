@@ -78,6 +78,9 @@ class Exports {
   }
 
   dataURI() {
+    if (Utils.isServerSide()) {
+      return
+    }
     return new Promise((resolve) => {
       const w = this.w
 
@@ -136,6 +139,9 @@ class Exports {
   }
 
   exportToSVG() {
+    if (Utils.isServerSide()) {
+      return
+    }
     this.triggerDownload(
       this.svgUrl(),
       this.w.config.chart.toolbar.export.svg.filename,
@@ -144,6 +150,9 @@ class Exports {
   }
 
   exportToPng() {
+    if (Utils.isServerSide()) {
+      return
+    }
     this.dataURI().then(({ imgURI, blob }) => {
       if (blob) {
         navigator.msSaveOrOpenBlob(blob, this.w.globals.chartID + '.png')
@@ -158,6 +167,9 @@ class Exports {
   }
 
   exportToCSV({ series, columnDelimiter, lineDelimiter = '\n' }) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const w = this.w
 
     let columns = []
@@ -218,6 +230,9 @@ class Exports {
     }
 
     const handleAxisRowsColumns = (s, sI) => {
+      if (Utils.isServerSide()) {
+        return
+      }
       if (columns.length && sI === 0) {
         rows.push(columns.join(columnDelimiter))
       }
@@ -308,6 +323,9 @@ class Exports {
   }
 
   triggerDownload(href, filename, ext) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const downloadLink = document.createElement('a')
     downloadLink.href = href
     downloadLink.download = (filename ? filename : this.w.globals.chartID) + ext

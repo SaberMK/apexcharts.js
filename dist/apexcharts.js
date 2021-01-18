@@ -1,6 +1,6 @@
 /*!
  * ApexCharts v3.23.1
- * (c) 2018-2020 Juned Chhipa
+ * (c) 2018-2021 Juned Chhipa
  * Released under the MIT License.
  */
 (function (global, factory) {
@@ -463,6 +463,15 @@
 
           return a.length > b.length ? a : b;
         }, 0);
+      }
+    }, {
+      key: "isServerSide",
+      value: function isServerSide() {
+        if (typeof window === 'undefined') {
+          return true;
+        }
+
+        return false;
       } // http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb#answer-12342275
 
     }, {
@@ -615,6 +624,17 @@
 
         return false;
       }
+      /**
+       * Sanitize dangerous characters in the string to prevent Cross-Site Scripting
+       * @param {string}
+       * string - String to sanitize
+       */
+
+    }, {
+      key: "sanitizeDom",
+      value: function sanitizeDom(string) {
+        return string.replace(/\&/g, '&amp;').replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace(/\"/g, '&quot;');
+      }
     }]);
 
     return Utils;
@@ -630,6 +650,10 @@
     function Filters(ctx) {
       _classCallCheck(this, Filters);
 
+      if (Utils.isServerSide()) {
+        return;
+      }
+
       this.ctx = ctx;
       this.w = ctx.w;
     } // create a re-usable filter which can be appended other filter effects and applied to multiple elements
@@ -638,6 +662,10 @@
     _createClass(Filters, [{
       key: "getDefaultFilter",
       value: function getDefaultFilter(el, i) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var w = this.w;
         el.unfilter(true);
         var filter = new window.SVG.Filter();
@@ -654,6 +682,10 @@
     }, {
       key: "addNormalFilter",
       value: function addNormalFilter(el, i) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var w = this.w; // revert shadow if it was there
         // but, ignore marker as marker don't have dropshadow yet
 
@@ -666,6 +698,10 @@
       key: "addLightenFilter",
       value: function addLightenFilter(el, i, attrs) {
         var _this = this;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
 
         var w = this.w;
         var intensity = attrs.intensity;
@@ -698,6 +734,10 @@
       value: function addDarkenFilter(el, i, attrs) {
         var _this2 = this;
 
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var w = this.w;
         var intensity = attrs.intensity;
         el.unfilter(true);
@@ -727,6 +767,10 @@
       value: function applyFilter(el, i, filter) {
         var intensity = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0.5;
 
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         switch (filter) {
           case 'none':
             {
@@ -755,6 +799,10 @@
     }, {
       key: "addShadow",
       value: function addShadow(add, i, attrs) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var blur = attrs.blur,
             top = attrs.top,
             left = attrs.left,
@@ -769,6 +817,11 @@
       key: "dropShadow",
       value: function dropShadow(el, attrs) {
         var i = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var top = attrs.top,
             left = attrs.left,
             blur = attrs.blur,
@@ -808,6 +861,10 @@
     }, {
       key: "setSelectionFilter",
       value: function setSelectionFilter(el, realIndex, dataPointIndex) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var w = this.w;
 
         if (typeof w.globals.selectedDataPoints[realIndex] !== 'undefined') {
@@ -824,6 +881,10 @@
     }, {
       key: "_scaleFilterSize",
       value: function _scaleFilterSize(el) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var setAttributes = function setAttributes(attrs) {
           for (var key in attrs) {
             if (attrs.hasOwnProperty(key)) {
@@ -4206,6 +4267,10 @@
     _createClass(Fill, [{
       key: "clippedImgArea",
       value: function clippedImgArea(params) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var w = this.w;
         var cnf = w.config;
         var svgW = parseInt(w.globals.gridWidth, 10);
@@ -4739,6 +4804,10 @@
     }, {
       key: "drawPoint",
       value: function drawPoint(x, y, radius, finishRadius, realIndex, dataPointIndex, j) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var w = this.w;
         var i = realIndex;
         var anim = new Animations(this.ctx);
@@ -8247,6 +8316,10 @@
     function Config(opts) {
       _classCallCheck(this, Config);
 
+      if (Utils.isServerSide()) {
+        return;
+      }
+
       this.opts = opts;
     }
 
@@ -8254,6 +8327,11 @@
       key: "init",
       value: function init(_ref) {
         var responsiveOverride = _ref.responsiveOverride;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var opts = this.opts;
         var options = new Options();
         var defaults = new Defaults(opts);
@@ -8328,6 +8406,10 @@
     }, {
       key: "checkForCatToNumericXAxis",
       value: function checkForCatToNumericXAxis(chartType, chartDefaults, opts) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var defaults = new Defaults(opts);
         var isBarHorizontal = chartType === 'bar' && opts.plotOptions && opts.plotOptions.bar && opts.plotOptions.bar.horizontal;
         var unsupportedZoom = chartType === 'pie' || chartType === 'polarArea' || chartType === 'donut' || chartType === 'radar' || chartType === 'radialBar' || chartType === 'heatmap';
@@ -8343,6 +8425,10 @@
     }, {
       key: "extendYAxis",
       value: function extendYAxis(opts, w) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var options = new Options();
 
         if (typeof opts.yaxis === 'undefined' || !opts.yaxis || Array.isArray(opts.yaxis) && opts.yaxis.length === 0) {
@@ -8404,6 +8490,10 @@
     }, {
       key: "extendAnnotations",
       value: function extendAnnotations(opts) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         if (typeof opts.annotations === 'undefined') {
           opts.annotations = {};
           opts.annotations.yaxis = [];
@@ -8419,6 +8509,10 @@
     }, {
       key: "extendYAxisAnnotations",
       value: function extendYAxisAnnotations(opts) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var options = new Options();
         opts.annotations.yaxis = Utils.extendArray(typeof opts.annotations.yaxis !== 'undefined' ? opts.annotations.yaxis : [], options.yAxisAnnotation);
         return opts;
@@ -8426,6 +8520,10 @@
     }, {
       key: "extendXAxisAnnotations",
       value: function extendXAxisAnnotations(opts) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var options = new Options();
         opts.annotations.xaxis = Utils.extendArray(typeof opts.annotations.xaxis !== 'undefined' ? opts.annotations.xaxis : [], options.xAxisAnnotation);
         return opts;
@@ -8433,6 +8531,10 @@
     }, {
       key: "extendPointAnnotations",
       value: function extendPointAnnotations(opts) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var options = new Options();
         opts.annotations.points = Utils.extendArray(typeof opts.annotations.points !== 'undefined' ? opts.annotations.points : [], options.pointAnnotation);
         return opts;
@@ -8440,6 +8542,10 @@
     }, {
       key: "checkForDarkTheme",
       value: function checkForDarkTheme(opts) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         if (opts.theme && opts.theme.mode === 'dark') {
           if (!opts.tooltip) {
             opts.tooltip = {};
@@ -8465,6 +8571,10 @@
     }, {
       key: "handleUserInputErrors",
       value: function handleUserInputErrors(opts) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var config = opts; // conflicting tooltip option. intersect makes sure to focus on 1 point at a time. Shared cannot be used along with it
 
         if (config.tooltip.shared && config.tooltip.intersect) {
@@ -8651,7 +8761,7 @@
             largestSize: 0
           },
           animationEnded: false,
-          isTouchDevice: 'ontouchstart' in window || navigator.msMaxTouchPoints,
+          isTouchDevice: window && 'ontouchstart' in window || navigator.msMaxTouchPoints,
           isDirty: false,
           // chart has been updated after the initial render. This is different than dataChanged property. isDirty means user manually called some method to update
           isExecCalled: false,
@@ -9484,6 +9594,10 @@
     function Formatters(ctx) {
       _classCallCheck(this, Formatters);
 
+      if (Utils.isServerSide()) {
+        return;
+      }
+
       this.ctx = ctx;
       this.w = ctx.w;
       this.tooltipKeyFormat = 'dd MMM';
@@ -9492,6 +9606,10 @@
     _createClass(Formatters, [{
       key: "xLabelFormat",
       value: function xLabelFormat(fn, val, timestamp, opts) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var w = this.w;
 
         if (w.config.xaxis.type === 'datetime') {
@@ -9509,6 +9627,10 @@
     }, {
       key: "defaultGeneralFormatter",
       value: function defaultGeneralFormatter(val) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         if (Array.isArray(val)) {
           return val.map(function (v) {
             return v;
@@ -9520,6 +9642,10 @@
     }, {
       key: "defaultYFormatter",
       value: function defaultYFormatter(v, yaxe, i) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var w = this.w;
 
         if (Utils.isNumber(v)) {
@@ -9538,6 +9664,10 @@
       key: "setLabelFormatters",
       value: function setLabelFormatters() {
         var _this = this;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
 
         var w = this.w;
 
@@ -9637,6 +9767,10 @@
     }, {
       key: "heatmapLabelFormatters",
       value: function heatmapLabelFormatters() {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var w = this.w;
 
         if (w.config.chart.type === 'heatmap') {
@@ -9924,6 +10058,10 @@
       value: function dataURI() {
         var _this = this;
 
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         return new Promise(function (resolve) {
           var w = _this.w;
 
@@ -9985,12 +10123,20 @@
     }, {
       key: "exportToSVG",
       value: function exportToSVG() {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         this.triggerDownload(this.svgUrl(), this.w.config.chart.toolbar.export.svg.filename, '.svg');
       }
     }, {
       key: "exportToPng",
       value: function exportToPng() {
         var _this2 = this;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
 
         this.dataURI().then(function (_ref) {
           var imgURI = _ref.imgURI,
@@ -10012,6 +10158,11 @@
             columnDelimiter = _ref2.columnDelimiter,
             _ref2$lineDelimiter = _ref2.lineDelimiter,
             lineDelimiter = _ref2$lineDelimiter === void 0 ? '\n' : _ref2$lineDelimiter;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var w = this.w;
         var columns = [];
         var rows = [];
@@ -10061,6 +10212,10 @@
         };
 
         var handleAxisRowsColumns = function handleAxisRowsColumns(s, sI) {
+          if (Utils.isServerSide()) {
+            return;
+          }
+
           if (columns.length && sI === 0) {
             rows.push(columns.join(columnDelimiter));
           }
@@ -10137,6 +10292,10 @@
     }, {
       key: "triggerDownload",
       value: function triggerDownload(href, filename, ext) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var downloadLink = document.createElement('a');
         downloadLink.href = href;
         downloadLink.download = (filename ? filename : this.w.globals.chartID) + ext;
@@ -12001,7 +12160,7 @@
             });
             seriesX.forEach(function (s, j) {
               if (j > 0) {
-                var xDiff = s - gl.seriesX[i][j - 1];
+                var xDiff = s - seriesX[j - 1];
 
                 if (xDiff > 0) {
                   gl.minXDiff = Math.min(xDiff, gl.minXDiff);
@@ -12614,6 +12773,10 @@
     _createClass(Localization, [{
       key: "setCurrentLocaleValues",
       value: function setCurrentLocaleValues(localeName) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var locales = this.w.config.chart.locales; // check if user has specified locales in global Apex variable
         // if yes - then extend those with local chart's locale
 
@@ -12807,6 +12970,10 @@
       value: function checkResponsiveConfig(opts) {
         var _this = this;
 
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var w = this.w;
         var cnf = w.config; // check if responsive config exists
 
@@ -12819,6 +12986,11 @@
 
         var iterateResponsiveOptions = function iterateResponsiveOptions() {
           var newOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+          if (Utils.isServerSide()) {
+            return;
+          }
+
           var largestBreakpoint = res[0].breakpoint;
           var width = window.innerWidth > 0 ? window.innerWidth : screen.width;
 
@@ -14397,7 +14569,7 @@
           var elLegend = document.createElement('div');
           var elLegendText = document.createElement('span');
           elLegendText.classList.add('apexcharts-legend-text');
-          elLegendText.innerHTML = Array.isArray(text) ? text.join(' ') : text;
+          elLegendText.innerHTML = Array.isArray(text) ? Utils.sanitizeDom(text.join(' ')) : Utils.sanitizeDom(text);
           var textColor = w.config.legend.labels.useSeriesColors ? w.globals.colors[i] : w.config.legend.labels.colors;
 
           if (!textColor) {
@@ -15034,6 +15206,10 @@
       value: function toggleMenu() {
         var _this4 = this;
 
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         window.setTimeout(function () {
           if (_this4.elMenu.classList.contains('apexcharts-menu-open')) {
             _this4.elMenu.classList.remove('apexcharts-menu-open');
@@ -15493,6 +15669,10 @@
       key: "selectionDragging",
       value: function selectionDragging(type, e) {
         var _this3 = this;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
 
         var w = this.w;
         var xyRatios = this.xyRatios;
@@ -16372,6 +16552,9 @@
             pColor = _ref4.pColor;
         var w = this.w;
         var ttCtx = this.ttCtx;
+        Object.keys(values).forEach(function (key) {
+          if (typeof values[key] === 'string') values[key] = Utils.sanitizeDom(values[key]);
+        });
         var val = values.val,
             xVal = values.xVal,
             xAxisTTVal = values.xAxisTTVal,
@@ -16402,7 +16585,7 @@
         var ttYLabel = ttItems[t].querySelector('.apexcharts-tooltip-text-label');
 
         if (ttYLabel) {
-          ttYLabel.innerHTML = seriesName ? seriesName : '';
+          ttYLabel.innerHTML = seriesName ? Utils.sanitizeDom(seriesName) : '';
         }
 
         var ttYVal = ttItems[t].querySelector('.apexcharts-tooltip-text-value');
@@ -21850,257 +22033,6 @@
     return Line;
   }();
 
-  /*
-   * treemap-squarify.js - open source implementation of squarified treemaps
-   *
-   * Treemap Squared 0.5 - Treemap Charting library
-   *
-   * https://github.com/imranghory/treemap-squared/
-   *
-   * Copyright (c) 2012 Imran Ghory (imranghory@gmail.com)
-   * Licensed under the MIT (http://www.opensource.org/licenses/mit-license.php) license.
-   *
-   *
-   * Implementation of the squarify treemap algorithm described in:
-   *
-   * Bruls, Mark; Huizing, Kees; van Wijk, Jarke J. (2000), "Squarified treemaps"
-   * in de Leeuw, W.; van Liere, R., Data Visualization 2000:
-   * Proc. Joint Eurographics and IEEE TCVG Symp. on Visualization, Springer-Verlag, pp. 33–42.
-   *
-   * Paper is available online at: http://www.win.tue.nl/~vanwijk/stm.pdf
-   *
-   * The code in this file is completeley decoupled from the drawing code so it should be trivial
-   * to port it to any other vector drawing library. Given an array of datapoints this library returns
-   * an array of cartesian coordinates that represent the rectangles that make up the treemap.
-   *
-   * The library also supports multidimensional data (nested treemaps) and performs normalization on the data.
-   *
-   * See the README file for more details.
-   */
-  window.TreemapSquared = {};
-
-  (function () {
-
-    window.TreemapSquared.generate = function () {
-      function Container(xoffset, yoffset, width, height) {
-        this.xoffset = xoffset; // offset from the the top left hand corner
-
-        this.yoffset = yoffset; // ditto
-
-        this.height = height;
-        this.width = width;
-
-        this.shortestEdge = function () {
-          return Math.min(this.height, this.width);
-        }; // getCoordinates - for a row of boxes which we've placed
-        //                  return an array of their cartesian coordinates
-
-
-        this.getCoordinates = function (row) {
-          var coordinates = [];
-          var subxoffset = this.xoffset,
-              subyoffset = this.yoffset; //our offset within the container
-
-          var areawidth = sumArray(row) / this.height;
-          var areaheight = sumArray(row) / this.width;
-          var i;
-
-          if (this.width >= this.height) {
-            for (i = 0; i < row.length; i++) {
-              coordinates.push([subxoffset, subyoffset, subxoffset + areawidth, subyoffset + row[i] / areawidth]);
-              subyoffset = subyoffset + row[i] / areawidth;
-            }
-          } else {
-            for (i = 0; i < row.length; i++) {
-              coordinates.push([subxoffset, subyoffset, subxoffset + row[i] / areaheight, subyoffset + areaheight]);
-              subxoffset = subxoffset + row[i] / areaheight;
-            }
-          }
-
-          return coordinates;
-        }; // cutArea - once we've placed some boxes into an row we then need to identify the remaining area,
-        //           this function takes the area of the boxes we've placed and calculates the location and
-        //           dimensions of the remaining space and returns a container box defined by the remaining area
-
-
-        this.cutArea = function (area) {
-          var newcontainer;
-
-          if (this.width >= this.height) {
-            var areawidth = area / this.height;
-            var newwidth = this.width - areawidth;
-            newcontainer = new Container(this.xoffset + areawidth, this.yoffset, newwidth, this.height);
-          } else {
-            var areaheight = area / this.width;
-            var newheight = this.height - areaheight;
-            newcontainer = new Container(this.xoffset, this.yoffset + areaheight, this.width, newheight);
-          }
-
-          return newcontainer;
-        };
-      } // normalize - the Bruls algorithm assumes we're passing in areas that nicely fit into our
-      //             container box, this method takes our raw data and normalizes the data values into
-      //             area values so that this assumption is valid.
-
-
-      function normalize(data, area) {
-        var normalizeddata = [];
-        var sum = sumArray(data);
-        var multiplier = area / sum;
-        var i;
-
-        for (i = 0; i < data.length; i++) {
-          normalizeddata[i] = data[i] * multiplier;
-        }
-
-        return normalizeddata;
-      } // treemapMultidimensional - takes multidimensional data (aka [[23,11],[11,32]] - nested array)
-      //                           and recursively calls itself using treemapSingledimensional
-      //                           to create a patchwork of treemaps and merge them
-
-
-      function treemapMultidimensional(data, width, height, xoffset, yoffset) {
-        xoffset = typeof xoffset === 'undefined' ? 0 : xoffset;
-        yoffset = typeof yoffset === 'undefined' ? 0 : yoffset;
-        var mergeddata = [];
-        var mergedtreemap;
-        var results = [];
-        var i;
-
-        if (isArray(data[0])) {
-          // if we've got more dimensions of depth
-          for (i = 0; i < data.length; i++) {
-            mergeddata[i] = sumMultidimensionalArray(data[i]);
-          }
-
-          mergedtreemap = treemapSingledimensional(mergeddata, width, height, xoffset, yoffset);
-
-          for (i = 0; i < data.length; i++) {
-            results.push(treemapMultidimensional(data[i], mergedtreemap[i][2] - mergedtreemap[i][0], mergedtreemap[i][3] - mergedtreemap[i][1], mergedtreemap[i][0], mergedtreemap[i][1]));
-          }
-        } else {
-          results = treemapSingledimensional(data, width, height, xoffset, yoffset);
-        }
-
-        return results;
-      } // treemapSingledimensional - simple wrapper around squarify
-
-
-      function treemapSingledimensional(data, width, height, xoffset, yoffset) {
-        xoffset = typeof xoffset === 'undefined' ? 0 : xoffset;
-        yoffset = typeof yoffset === 'undefined' ? 0 : yoffset;
-        var rawtreemap = squarify(normalize(data, width * height), [], new Container(xoffset, yoffset, width, height), []);
-        return flattenTreemap(rawtreemap);
-      } // flattenTreemap - squarify implementation returns an array of arrays of coordinates
-      //                  because we have a new array everytime we switch to building a new row
-      //                  this converts it into an array of coordinates.
-
-
-      function flattenTreemap(rawtreemap) {
-        var flattreemap = [];
-        var i, j;
-
-        for (i = 0; i < rawtreemap.length; i++) {
-          for (j = 0; j < rawtreemap[i].length; j++) {
-            flattreemap.push(rawtreemap[i][j]);
-          }
-        }
-
-        return flattreemap;
-      } // squarify  - as per the Bruls paper
-      //             plus coordinates stack and containers so we get
-      //             usable data out of it
-
-
-      function squarify(data, currentrow, container, stack) {
-        var length;
-        var nextdatapoint;
-        var newcontainer;
-
-        if (data.length === 0) {
-          stack.push(container.getCoordinates(currentrow));
-          return;
-        }
-
-        length = container.shortestEdge();
-        nextdatapoint = data[0];
-
-        if (improvesRatio(currentrow, nextdatapoint, length)) {
-          currentrow.push(nextdatapoint);
-          squarify(data.slice(1), currentrow, container, stack);
-        } else {
-          newcontainer = container.cutArea(sumArray(currentrow), stack);
-          stack.push(container.getCoordinates(currentrow));
-          squarify(data, [], newcontainer, stack);
-        }
-
-        return stack;
-      } // improveRatio - implements the worse calculation and comparision as given in Bruls
-      //                (note the error in the original paper; fixed here)
-
-
-      function improvesRatio(currentrow, nextnode, length) {
-        var newrow;
-
-        if (currentrow.length === 0) {
-          return true;
-        }
-
-        newrow = currentrow.slice();
-        newrow.push(nextnode);
-        var currentratio = calculateRatio(currentrow, length);
-        var newratio = calculateRatio(newrow, length); // the pseudocode in the Bruls paper has the direction of the comparison
-        // wrong, this is the correct one.
-
-        return currentratio >= newratio;
-      } // calculateRatio - calculates the maximum width to height ratio of the
-      //                  boxes in this row
-
-
-      function calculateRatio(row, length) {
-        var min = Math.min.apply(Math, row);
-        var max = Math.max.apply(Math, row);
-        var sum = sumArray(row);
-        return Math.max(Math.pow(length, 2) * max / Math.pow(sum, 2), Math.pow(sum, 2) / (Math.pow(length, 2) * min));
-      } // isArray - checks if arr is an array
-
-
-      function isArray(arr) {
-        return arr && arr.constructor === Array;
-      } // sumArray - sums a single dimensional array
-
-
-      function sumArray(arr) {
-        var sum = 0;
-        var i;
-
-        for (i = 0; i < arr.length; i++) {
-          sum += arr[i];
-        }
-
-        return sum;
-      } // sumMultidimensionalArray - sums the values in a nested array (aka [[0,1],[[2,3]]])
-
-
-      function sumMultidimensionalArray(arr) {
-        var i,
-            total = 0;
-
-        if (isArray(arr[0])) {
-          for (i = 0; i < arr.length; i++) {
-            total += sumMultidimensionalArray(arr[i]);
-          }
-        } else {
-          total = sumArray(arr);
-        }
-
-        return total;
-      }
-
-      return treemapMultidimensional;
-    }();
-  })();
-
   /**
    * ApexCharts TreemapChart Class.
    * @module TreemapChart
@@ -22122,6 +22054,10 @@
       key: "draw",
       value: function draw(series) {
         var _this = this;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
 
         var w = this.w;
         var graphics = new Graphics(this.ctx);
@@ -23197,6 +23133,10 @@
     _createClass(Core, [{
       key: "setupElements",
       value: function setupElements() {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var gl = this.w.globals;
         var cnf = this.w.config; // const graphics = new Graphics(this.ctx)
 
@@ -23938,9 +23878,14 @@
     } else {
       root.SVG = factory(root, root.document);
     }
-  })(typeof window !== 'undefined' ? window : undefined, function (window, document) {
-    // Find global reference - uses 'this' by default when available,
+  })(window, function (window, document) {
+    if (Utils.isServerSide()) {
+      return;
+    }
+
+    window = typeof window !== 'undefined' ? window : this; // Find global reference - uses 'this' by default when available,
     // falls back to 'window' otherwise (for bundlers like Webpack)
+
     var globalRef = typeof this !== 'undefined' ? this : window; // The main wrapping element
 
     var SVG = globalRef.SVG = function (element) {
@@ -25415,10 +25360,10 @@
               }
 
               if (topParent != document) throw new Error('Element not in the dom');
-            } else {} // the element is NOT in the dom, throw error
-            // disabling the check below which fixes issue #76
-            // if (!document.documentElement.contains(element.node)) throw new Exception('Element not in the dom')
-            // find native bbox
+            } else {// the element is NOT in the dom, throw error
+              // disabling the check below which fixes issue #76
+              // if (!document.documentElement.contains(element.node)) throw new Exception('Element not in the dom')
+            } // find native bbox
 
 
             box = element.node.getBBox();
@@ -29727,9 +29672,12 @@
     };
   })();
 
-  if (typeof window.Apex === 'undefined') {
-    window.Apex = {};
-  }
+  if (!Utils.isServerSide()) {
+    if (typeof window.Apex === 'undefined') {
+      window.Apex = {};
+    }
+  } // global Apex object which user can use to override chart's defaults globally
+
 
   var InitCtxVariables = /*#__PURE__*/function () {
     function InitCtxVariables(ctx) {
@@ -29887,6 +29835,10 @@
     function ApexCharts(el, opts) {
       _classCallCheck(this, ApexCharts);
 
+      if (Utils.isServerSide()) {
+        return;
+      }
+
       this.opts = opts;
       this.ctx = this; // Pass the user supplied options to the Base Class where these options will be extended with defaults. The returned object from Base Class will become the config object in the entire codebase.
 
@@ -29910,7 +29862,11 @@
       value: function render() {
         var _this = this;
 
-        // main method
+        if (Utils.isServerSide()) {
+          return;
+        } // main method
+
+
         return new Promise(function (resolve, reject) {
           // only draw chart, if element found
           if (_this.el !== null) {
@@ -29963,6 +29919,10 @@
     }, {
       key: "create",
       value: function create(ser, opts) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var w = this.w;
         var initCtx = new InitCtxVariables(this);
         initCtx.initModules();
@@ -30032,6 +29992,9 @@
             // as we have minX and maxX values, determine the default DateTimeFormat for time series
             this.formatters.setLabelFormatters();
           }
+
+          this.ctx.toolbar.minX = w.globals.minX;
+          this.ctx.toolbar.maxX = w.globals.maxX;
         } // we need to generate yaxis for heatmap separately as we are not showing numerics there, but seriesNames. There are some tweaks which are required for heatmap to align labels correctly which are done in below function
         // Also we need to do this before calculating Dimensions plotCoords() method of Dimensions
 
@@ -30072,6 +30035,11 @@
         var _this2 = this;
 
         var graphData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var me = this;
         var w = me.w;
         return new Promise(function (resolve, reject) {
@@ -30179,6 +30147,10 @@
     }, {
       key: "destroy",
       value: function destroy() {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         window.removeEventListener('resize', this.windowResizeHandler);
         window.removeResizeListener(this.el.parentNode, this.parentResizeHandler); // remove the chart's instance from the global Apex._chartInstances
 
@@ -30213,6 +30185,11 @@
         var animate = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
         var updateSyncedCharts = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
         var overwriteInitialConfig = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var w = this.w; // when called externally, clear some global variables
         // fixes apexcharts.js#1488
 
@@ -30265,6 +30242,11 @@
         var newSeries = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
         var animate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
         var overwriteInitialSeries = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         this.series.resetSeries(false);
         this.updateHelpers.revertDefaultAxisMinMax();
         return this.updateHelpers._updateSeries(newSeries, animate, overwriteInitialSeries);
@@ -30280,6 +30262,11 @@
       value: function appendSeries(newSerie) {
         var animate = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
         var overwriteInitialSeries = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var newSeries = this.w.config.series.slice();
         newSeries.push(newSerie);
         this.series.resetSeries(false);
@@ -30296,6 +30283,11 @@
       key: "appendData",
       value: function appendData(newData) {
         var overwriteInitialSeries = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var me = this;
         me.w.globals.dataChanged = true;
         me.series.getPreviousPaths();
@@ -30321,6 +30313,10 @@
       key: "update",
       value: function update(options) {
         var _this4 = this;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
 
         return new Promise(function (resolve, reject) {
           new Destroy(_this4.ctx).clear({
@@ -30352,6 +30348,10 @@
     }, {
       key: "getSyncedCharts",
       value: function getSyncedCharts() {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var chartGroups = this.getGroupedCharts();
         var allCharts = [this];
 
@@ -30373,6 +30373,10 @@
       value: function getGroupedCharts() {
         var _this5 = this;
 
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         return Apex._chartInstances.filter(function (ch) {
           if (ch.group) {
             return true;
@@ -30384,16 +30388,28 @@
     }, {
       key: "toggleSeries",
       value: function toggleSeries(seriesName) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         return this.series.toggleSeries(seriesName);
       }
     }, {
       key: "showSeries",
       value: function showSeries(seriesName) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         this.series.showSeries(seriesName);
       }
     }, {
       key: "hideSeries",
       value: function hideSeries(seriesName) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         this.series.hideSeries(seriesName);
       }
     }, {
@@ -30401,18 +30417,31 @@
       value: function resetSeries() {
         var shouldUpdateChart = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
         var shouldResetZoom = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         this.series.resetSeries(shouldUpdateChart, shouldResetZoom);
       } // Public method to add event listener on chart context
 
     }, {
       key: "addEventListener",
       value: function addEventListener(name, handler) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         this.events.addEventListener(name, handler);
       } // Public method to remove event listener on chart context
 
     }, {
       key: "removeEventListener",
       value: function removeEventListener(name, handler) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         this.events.removeEventListener(name, handler);
       }
     }, {
@@ -30420,6 +30449,11 @@
       value: function addXaxisAnnotation(opts) {
         var pushToMemory = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
         var context = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var me = this;
 
         if (context) {
@@ -30433,6 +30467,11 @@
       value: function addYaxisAnnotation(opts) {
         var pushToMemory = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
         var context = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var me = this;
 
         if (context) {
@@ -30446,6 +30485,11 @@
       value: function addPointAnnotation(opts) {
         var pushToMemory = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
         var context = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var me = this;
 
         if (context) {
@@ -30458,6 +30502,11 @@
       key: "clearAnnotations",
       value: function clearAnnotations() {
         var context = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var me = this;
 
         if (context) {
@@ -30470,6 +30519,11 @@
       key: "removeAnnotation",
       value: function removeAnnotation(id) {
         var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var me = this;
 
         if (context) {
@@ -30481,18 +30535,31 @@
     }, {
       key: "getChartArea",
       value: function getChartArea() {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var el = this.w.globals.dom.baseEl.querySelector('.apexcharts-inner');
         return el;
       }
     }, {
       key: "getSeriesTotalXRange",
       value: function getSeriesTotalXRange(minX, maxX) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         return this.coreUtils.getSeriesTotalsXRange(minX, maxX);
       }
     }, {
       key: "getHighestValueInSeries",
       value: function getHighestValueInSeries() {
         var seriesIndex = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var range = new Range$1(this.ctx);
         return range.getMinYMaxY(seriesIndex).highestY;
       }
@@ -30500,43 +30567,76 @@
       key: "getLowestValueInSeries",
       value: function getLowestValueInSeries() {
         var seriesIndex = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var range = new Range$1(this.ctx);
         return range.getMinYMaxY(seriesIndex).lowestY;
       }
     }, {
       key: "getSeriesTotal",
       value: function getSeriesTotal() {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         return this.w.globals.seriesTotals;
       }
     }, {
       key: "toggleDataPointSelection",
       value: function toggleDataPointSelection(seriesIndex, dataPointIndex) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         return this.updateHelpers.toggleDataPointSelection(seriesIndex, dataPointIndex);
       }
     }, {
       key: "zoomX",
       value: function zoomX(min, max) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         this.ctx.toolbar.zoomUpdateOptions(min, max);
       }
     }, {
       key: "setLocale",
       value: function setLocale(localeName) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         this.localization.setCurrentLocaleValues(localeName);
       }
     }, {
       key: "dataURI",
       value: function dataURI() {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var exp = new Exports(this.ctx);
         return exp.dataURI();
       }
     }, {
       key: "paper",
       value: function paper() {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         return this.w.globals.dom.Paper;
       }
     }, {
       key: "_parentResizeCallback",
       value: function _parentResizeCallback() {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         if (!this.w.globals.noData && this.w.globals.animationEnded && this.w.config.chart.redrawOnParentResize) {
           this._windowResize();
         }
@@ -30550,6 +30650,10 @@
       value: function _windowResize() {
         var _this6 = this;
 
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         clearTimeout(this.w.globals.resizeTimer);
         this.w.globals.resizeTimer = window.setTimeout(function () {
           _this6.w.globals.resized = true;
@@ -30561,6 +30665,10 @@
     }, {
       key: "_windowResizeHandler",
       value: function _windowResizeHandler() {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var redraw = this.w.config.chart.redrawOnWindowResize;
 
         if (typeof redraw === 'function') {
@@ -30572,6 +30680,10 @@
     }], [{
       key: "getChartByID",
       value: function getChartByID(id) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var chartId = Utils.escapeString(id);
 
         var c = Apex._chartInstances.filter(function (ch) {
@@ -30587,6 +30699,10 @@
     }, {
       key: "initOnLoad",
       value: function initOnLoad() {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var els = document.querySelectorAll('[data-apexcharts]');
 
         for (var i = 0; i < els.length; i++) {
@@ -30615,6 +30731,10 @@
     }, {
       key: "exec",
       value: function exec(chartID, fn) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         var chart = this.getChartByID(chartID);
         if (!chart) return; // turn on the global exec flag to indicate this method was called
 
@@ -30634,6 +30754,10 @@
     }, {
       key: "merge",
       value: function merge(target, source) {
+        if (Utils.isServerSide()) {
+          return;
+        }
+
         return Utils.extend(target, source);
       }
     }]);

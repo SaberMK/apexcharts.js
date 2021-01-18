@@ -447,6 +447,9 @@ export default class Toolbar {
   }
 
   toggleMenu() {
+    if (Utils.isServerSide()) {
+      return
+    }
     window.setTimeout(() => {
       if (this.elMenu.classList.contains('apexcharts-menu-open')) {
         this.elMenu.classList.remove('apexcharts-menu-open')

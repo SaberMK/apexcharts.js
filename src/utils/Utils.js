@@ -4,7 +4,7 @@
 
 class Utils {
   static bind(fn, me) {
-    return function() {
+    return function () {
       return fn.apply(me, arguments)
     }
   }
@@ -28,8 +28,8 @@ class Utils {
   // credit: http://stackoverflow.com/questions/27936772/deep-object-merging-in-es6-es7#answer-34749873
   static extend(target, source) {
     if (typeof Object.assign !== 'function') {
-      ;(function() {
-        Object.assign = function(target) {
+      ; (function () {
+        Object.assign = function (target) {
           'use strict'
           // We must check against these specific cases.
           if (target === undefined || target === null) {
@@ -190,6 +190,13 @@ class Utils {
     }, 0)
   }
 
+  static isServerSide() {
+    if (typeof window === 'undefined') {
+      return true;
+    }
+    return false;
+  }
+
   // http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb#answer-12342275
   static hexToRgba(hex = '#999999', opacity = 0.6) {
     if (hex.substring(0, 1) !== '#') {
@@ -218,9 +225,9 @@ class Utils {
     )
     return rgb && rgb.length === 4
       ? '#' +
-          ('0' + parseInt(rgb[1], 10).toString(16)).slice(-2) +
-          ('0' + parseInt(rgb[2], 10).toString(16)).slice(-2) +
-          ('0' + parseInt(rgb[3], 10).toString(16)).slice(-2)
+      ('0' + parseInt(rgb[1], 10).toString(16)).slice(-2) +
+      ('0' + parseInt(rgb[2], 10).toString(16)).slice(-2) +
+      ('0' + parseInt(rgb[3], 10).toString(16)).slice(-2)
       : ''
   }
 

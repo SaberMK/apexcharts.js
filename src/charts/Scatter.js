@@ -3,6 +3,7 @@ import Fill from '../modules/Fill'
 import Filters from '../modules/Filters'
 import Graphics from '../modules/Graphics'
 import Markers from '../modules/Markers'
+import Utils from '../utils/Utils'
 
 /**
  * ApexCharts Scatter Class.
@@ -97,6 +98,9 @@ export default class Scatter {
   }
 
   drawPoint(x, y, radius, finishRadius, realIndex, dataPointIndex, j) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const w = this.w
 
     let i = realIndex

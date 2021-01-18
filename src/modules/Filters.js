@@ -7,12 +7,18 @@ import Utils from './../utils/Utils'
  **/
 class Filters {
   constructor(ctx) {
+    if (Utils.isServerSide()) {
+      return
+    }
     this.ctx = ctx
     this.w = ctx.w
   }
 
   // create a re-usable filter which can be appended other filter effects and applied to multiple elements
   getDefaultFilter(el, i) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const w = this.w
     el.unfilter(true)
 
@@ -34,6 +40,9 @@ class Filters {
   }
 
   addNormalFilter(el, i) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const w = this.w
 
     // revert shadow if it was there
@@ -48,6 +57,9 @@ class Filters {
 
   // appends dropShadow to the filter object which can be chained with other filter effects
   addLightenFilter(el, i, attrs) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const w = this.w
     const { intensity } = attrs
 
@@ -73,6 +85,9 @@ class Filters {
 
   // appends dropShadow to the filter object which can be chained with other filter effects
   addDarkenFilter(el, i, attrs) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const w = this.w
     const { intensity } = attrs
 
@@ -96,6 +111,9 @@ class Filters {
   }
 
   applyFilter(el, i, filter, intensity = 0.5) {
+    if (Utils.isServerSide()) {
+      return
+    }
     switch (filter) {
       case 'none': {
         this.addNormalFilter(el, i)
@@ -121,6 +139,9 @@ class Filters {
 
   // appends dropShadow to the filter object which can be chained with other filter effects
   addShadow(add, i, attrs) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const { blur, top, left, color, opacity } = attrs
 
     let shadowBlur = add
@@ -135,6 +156,9 @@ class Filters {
   // directly adds dropShadow to the element and returns the same element.
   // the only way it is different from the addShadow() function is that addShadow is chainable to other filters, while this function discards all filters and add dropShadow
   dropShadow(el, attrs, i = 0) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let { top, left, blur, color, opacity, noUserSpaceOnUse } = attrs
     const w = this.w
 
@@ -178,6 +202,9 @@ class Filters {
   }
 
   setSelectionFilter(el, realIndex, dataPointIndex) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const w = this.w
     if (typeof w.globals.selectedDataPoints[realIndex] !== 'undefined') {
       if (
@@ -193,6 +220,9 @@ class Filters {
   }
 
   _scaleFilterSize(el) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const setAttributes = (attrs) => {
       for (let key in attrs) {
         if (attrs.hasOwnProperty(key)) {

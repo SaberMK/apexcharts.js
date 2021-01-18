@@ -420,6 +420,9 @@ export default class ZoomPanSelection extends Toolbar {
   }
 
   selectionDragging(type, e) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const w = this.w
     const xyRatios = this.xyRatios
 

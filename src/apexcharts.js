@@ -20,6 +20,9 @@ import Destroy from './modules/helpers/Destroy'
 
 export default class ApexCharts {
   constructor(el, opts) {
+    if (Utils.isServerSide()) {
+      return
+    }
     this.opts = opts
     this.ctx = this
 
@@ -45,6 +48,9 @@ export default class ApexCharts {
    * The primary method user will call to render the chart.
    */
   render() {
+    if (Utils.isServerSide()) {
+      return
+    }
     // main method
     return new Promise((resolve, reject) => {
       // only draw chart, if element found
@@ -93,6 +99,9 @@ export default class ApexCharts {
   }
 
   create(ser, opts) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let w = this.w
 
     const initCtx = new InitCtxVariables(this)
@@ -217,6 +226,9 @@ export default class ApexCharts {
   }
 
   mount(graphData = null) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let me = this
     let w = me.w
 
@@ -339,6 +351,9 @@ export default class ApexCharts {
    * Destroy the chart instance by removing all elements which also clean up event listeners on those elements.
    */
   destroy() {
+    if (Utils.isServerSide()) {
+      return
+    }
     window.removeEventListener('resize', this.windowResizeHandler)
 
     window.removeResizeListener(this.el.parentNode, this.parentResizeHandler)
@@ -368,6 +383,9 @@ export default class ApexCharts {
     updateSyncedCharts = true,
     overwriteInitialConfig = true
   ) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const w = this.w
 
     // when called externally, clear some global variables
@@ -415,6 +433,9 @@ export default class ApexCharts {
    * @param {array} series - New series which will override the existing
    */
   updateSeries(newSeries = [], animate = true, overwriteInitialSeries = true) {
+    if (Utils.isServerSide()) {
+      return
+    }
     this.series.resetSeries(false)
     this.updateHelpers.revertDefaultAxisMinMax()
     return this.updateHelpers._updateSeries(
@@ -430,6 +451,9 @@ export default class ApexCharts {
    * @param {array} newSerie - New serie which will be appended to the existing series
    */
   appendSeries(newSerie, animate = true, overwriteInitialSeries = true) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const newSeries = this.w.config.series.slice()
     newSeries.push(newSerie)
     this.series.resetSeries(false)
@@ -447,6 +471,9 @@ export default class ApexCharts {
    * @param {array} newData - New data in the same format as series
    */
   appendData(newData, overwriteInitialSeries = true) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let me = this
 
     me.w.globals.dataChanged = true
@@ -471,6 +498,9 @@ export default class ApexCharts {
   }
 
   update(options) {
+    if (Utils.isServerSide()) {
+      return
+    }
     return new Promise((resolve, reject) => {
       new Destroy(this.ctx).clear({ isUpdating: true })
 
@@ -497,6 +527,9 @@ export default class ApexCharts {
    * Get all charts in the same "group" (including the instance which is called upon) to sync them when user zooms in/out or pan.
    */
   getSyncedCharts() {
+    if (Utils.isServerSide()) {
+      return
+    }
     const chartGroups = this.getGroupedCharts()
     let allCharts = [this]
     if (chartGroups.length) {
@@ -513,6 +546,9 @@ export default class ApexCharts {
    * Get charts in the same "group" (excluding the instance which is called upon) to perform operations on the other charts of the same group (eg., tooltip hovering)
    */
   getGroupedCharts() {
+    if (Utils.isServerSide()) {
+      return
+    }
     return Apex._chartInstances
       .filter((ch) => {
         if (ch.group) {
@@ -523,6 +559,9 @@ export default class ApexCharts {
   }
 
   static getChartByID(id) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const chartId = Utils.escapeString(id)
     const c = Apex._chartInstances.filter((ch) => ch.id === chartId)[0]
     return c && c.chart
@@ -532,6 +571,9 @@ export default class ApexCharts {
    * Allows the user to provide data attrs in the element and the chart will render automatically when this method is called by searching for the elements containing 'data-apexcharts' attribute
    */
   static initOnLoad() {
+    if (Utils.isServerSide()) {
+      return
+    }
     const els = document.querySelectorAll('[data-apexcharts]')
 
     for (let i = 0; i < els.length; i++) {
@@ -558,6 +600,9 @@ export default class ApexCharts {
    * @param {object} opts - The parameters which are accepted in the original method will be passed here in the same order.
    */
   static exec(chartID, fn, ...opts) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const chart = this.getChartByID(chartID)
     if (!chart) return
 
@@ -572,36 +617,60 @@ export default class ApexCharts {
   }
 
   static merge(target, source) {
+    if (Utils.isServerSide()) {
+      return
+    }
     return Utils.extend(target, source)
   }
 
   toggleSeries(seriesName) {
+    if (Utils.isServerSide()) {
+      return
+    }
     return this.series.toggleSeries(seriesName)
   }
 
   showSeries(seriesName) {
+    if (Utils.isServerSide()) {
+      return
+    }
     this.series.showSeries(seriesName)
   }
 
   hideSeries(seriesName) {
+    if (Utils.isServerSide()) {
+      return
+    }
     this.series.hideSeries(seriesName)
   }
 
   resetSeries(shouldUpdateChart = true, shouldResetZoom = true) {
+    if (Utils.isServerSide()) {
+      return
+    }
     this.series.resetSeries(shouldUpdateChart, shouldResetZoom)
   }
 
   // Public method to add event listener on chart context
   addEventListener(name, handler) {
+    if (Utils.isServerSide()) {
+      return
+    }
     this.events.addEventListener(name, handler)
   }
 
   // Public method to remove event listener on chart context
   removeEventListener(name, handler) {
+    if (Utils.isServerSide()) {
+      return
+    }
     this.events.removeEventListener(name, handler)
   }
 
   addXaxisAnnotation(opts, pushToMemory = true, context = undefined) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let me = this
     if (context) {
       me = context
@@ -610,6 +679,9 @@ export default class ApexCharts {
   }
 
   addYaxisAnnotation(opts, pushToMemory = true, context = undefined) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let me = this
     if (context) {
       me = context
@@ -618,6 +690,9 @@ export default class ApexCharts {
   }
 
   addPointAnnotation(opts, pushToMemory = true, context = undefined) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let me = this
     if (context) {
       me = context
@@ -626,6 +701,9 @@ export default class ApexCharts {
   }
 
   clearAnnotations(context = undefined) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let me = this
     if (context) {
       me = context
@@ -634,6 +712,9 @@ export default class ApexCharts {
   }
 
   removeAnnotation(id, context = undefined) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let me = this
     if (context) {
       me = context
@@ -642,30 +723,48 @@ export default class ApexCharts {
   }
 
   getChartArea() {
+    if (Utils.isServerSide()) {
+      return
+    }
     const el = this.w.globals.dom.baseEl.querySelector('.apexcharts-inner')
 
     return el
   }
 
   getSeriesTotalXRange(minX, maxX) {
+    if (Utils.isServerSide()) {
+      return
+    }
     return this.coreUtils.getSeriesTotalsXRange(minX, maxX)
   }
 
   getHighestValueInSeries(seriesIndex = 0) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const range = new Range(this.ctx)
     return range.getMinYMaxY(seriesIndex).highestY
   }
 
   getLowestValueInSeries(seriesIndex = 0) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const range = new Range(this.ctx)
     return range.getMinYMaxY(seriesIndex).lowestY
   }
 
   getSeriesTotal() {
+    if (Utils.isServerSide()) {
+      return
+    }
     return this.w.globals.seriesTotals
   }
 
   toggleDataPointSelection(seriesIndex, dataPointIndex) {
+    if (Utils.isServerSide()) {
+      return
+    }
     return this.updateHelpers.toggleDataPointSelection(
       seriesIndex,
       dataPointIndex
@@ -673,23 +772,38 @@ export default class ApexCharts {
   }
 
   zoomX(min, max) {
+    if (Utils.isServerSide()) {
+      return
+    }
     this.ctx.toolbar.zoomUpdateOptions(min, max)
   }
 
   setLocale(localeName) {
+    if (Utils.isServerSide()) {
+      return
+    }
     this.localization.setCurrentLocaleValues(localeName)
   }
 
   dataURI() {
+    if (Utils.isServerSide()) {
+      return
+    }
     const exp = new Exports(this.ctx)
     return exp.dataURI()
   }
 
   paper() {
+    if (Utils.isServerSide()) {
+      return
+    }
     return this.w.globals.dom.Paper
   }
 
   _parentResizeCallback() {
+    if (Utils.isServerSide()) {
+      return
+    }
     if (
       !this.w.globals.noData &&
       this.w.globals.animationEnded &&
@@ -703,6 +817,9 @@ export default class ApexCharts {
    * Handle window resize and re-draw the whole chart.
    */
   _windowResize() {
+    if (Utils.isServerSide()) {
+      return
+    }
     clearTimeout(this.w.globals.resizeTimer)
     this.w.globals.resizeTimer = window.setTimeout(() => {
       this.w.globals.resized = true
@@ -714,6 +831,9 @@ export default class ApexCharts {
   }
 
   _windowResizeHandler() {
+    if (Utils.isServerSide()) {
+      return
+    }
     let { redrawOnWindowResize: redraw } = this.w.config.chart
 
     if (typeof redraw === 'function') {

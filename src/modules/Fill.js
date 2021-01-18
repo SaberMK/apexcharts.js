@@ -17,6 +17,9 @@ class Fill {
   }
 
   clippedImgArea(params) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let w = this.w
     let cnf = w.config
 

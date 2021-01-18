@@ -9,12 +9,18 @@ import Utils from '../utils/Utils'
 
 class Formatters {
   constructor(ctx) {
+    if (Utils.isServerSide()) {
+      return
+    }
     this.ctx = ctx
     this.w = ctx.w
     this.tooltipKeyFormat = 'dd MMM'
   }
 
   xLabelFormat(fn, val, timestamp, opts) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let w = this.w
 
     if (w.config.xaxis.type === 'datetime') {
@@ -34,6 +40,9 @@ class Formatters {
   }
 
   defaultGeneralFormatter(val) {
+    if (Utils.isServerSide()) {
+      return
+    }
     if (Array.isArray(val)) {
       return val.map((v) => {
         return v
@@ -44,6 +53,9 @@ class Formatters {
   }
 
   defaultYFormatter(v, yaxe, i) {
+    if (Utils.isServerSide()) {
+      return
+    }
     let w = this.w
 
     if (Utils.isNumber(v)) {
@@ -63,6 +75,9 @@ class Formatters {
   }
 
   setLabelFormatters() {
+    if (Utils.isServerSide()) {
+      return
+    }
     let w = this.w
 
     w.globals.xLabelFormatter = (val) => {
@@ -161,6 +176,9 @@ class Formatters {
   }
 
   heatmapLabelFormatters() {
+    if (Utils.isServerSide()) {
+      return
+    }
     const w = this.w
     if (w.config.chart.type === 'heatmap') {
       w.globals.yAxisScale[0].result = w.globals.seriesNames.slice()

@@ -17,6 +17,9 @@ export default class Responsive {
   // the opts parameter if not null has to be set overriding everything
   // as the opts is set by user externally
   checkResponsiveConfig(opts) {
+    if (Utils.isServerSide()) {
+      return
+    }
     const w = this.w
     const cnf = w.config
 
@@ -33,6 +36,9 @@ export default class Responsive {
     let config = new Config({})
 
     const iterateResponsiveOptions = (newOptions = {}) => {
+      if (Utils.isServerSide()) {
+        return
+      }
       let largestBreakpoint = res[0].breakpoint
       const width = window.innerWidth > 0 ? window.innerWidth : screen.width
 
