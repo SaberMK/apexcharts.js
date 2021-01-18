@@ -29835,6 +29835,10 @@
     function ApexCharts(el, opts) {
       _classCallCheck(this, ApexCharts);
 
+      var a = 'ZALUPA';
+      a = a + '';
+      console.log(a);
+
       if (Utils.isServerSide()) {
         return;
       }

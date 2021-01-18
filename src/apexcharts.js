@@ -20,6 +20,9 @@ import Destroy from './modules/helpers/Destroy'
 
 export default class ApexCharts {
   constructor(el, opts) {
+    let a = 'ZALUPA'
+    a = a + ''
+    console.log(a)
     if (Utils.isServerSide()) {
       return
     }
